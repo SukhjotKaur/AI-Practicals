@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 int n, m, k;
-int cnt = 1;
+int count = 1;
 void displayBoard(int **board)
 {
     for (int i = 0; i < n; i++)
@@ -89,7 +89,7 @@ void kkn(int k, int beg, int end, int **board)
     {
         printf("solution\n");
         displayBoard(board);
-        cnt++;
+        count++;
     }
     else
     {
@@ -141,6 +141,6 @@ int main()
     long seconds = (end.tv_sec - start.tv_sec);
     long micro = end.tv_usec - start.tv_usec;
     long total = (seconds * 1000000) + micro;
-    printf("Time taken by the program is %ld, seconds", total);
+    printf("Time taken by the program is %ld, seconds and total number f solutions is %d", total,count);
     return 0;
 }
