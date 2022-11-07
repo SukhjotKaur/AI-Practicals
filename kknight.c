@@ -3,7 +3,8 @@
 #include <sys/time.h>
 int n, m, k;
 int count = 1;
-void displayBoard(int **board)
+// int board[n][m];
+void display(int **board)
 {
     for (int i = 0; i < n; i++)
     {
@@ -51,7 +52,7 @@ void attack(int i, int j, int a, int **board)
         board[i - 1][j - 2] = a;
     }
 }
-int canPlace(int i, int j, int **board)
+int can(int i, int j, int **board)
 {
     if (board[i][j] == 0)
         return 1;
@@ -70,25 +71,12 @@ void place(int i, int j, int k, int a, int **board, int **new_board)
     new_board[i][j] = k;
     attack(i, j, a, new_board);
 }
-int blanks(int **board)
-{
-    int b = 0;
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < m; j++)
-        {
-            if (board[i][j] == 0)
-                b++;
-        }
-    }
-    return b;
-}
 void kkn(int k, int beg, int end, int **board)
 {
     if (k == 0)
     {
         printf("solution\n");
-        displayBoard(board);
+        display(board);
         count++;
     }
     else
@@ -97,18 +85,15 @@ void kkn(int k, int beg, int end, int **board)
         {
             for (int j = end; j < n; j++)
             {
-                if (canPlace(i, j, board))
+                if (can(i, j, board))
                 {
                     int **new_board = malloc(n * sizeof(int));
                     for (int x = 0; x < n; x++)
                     {
                         new_board[x] = malloc(m * sizeof(int));
                     }
-                    if (k < 2 * blanks(board))
-                    {
                         place(i, j, 1, 2, board, new_board);
                         kkn(k - 1, i, j, new_board);
-                    }
                 }
             }
             end = 0;
