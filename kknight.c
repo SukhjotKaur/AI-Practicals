@@ -18,7 +18,6 @@ void display(int **board)
 }
 void attack(int i, int j, int a, int **board)
 {
-
     if ((i + 2) < n && (j - 1) >= 0)
     {
         board[i + 2][j - 1] = a;
@@ -59,17 +58,17 @@ int can(int i, int j, int **board)
     else
         return 0;
 }
-void place(int i, int j, int k, int a, int **board, int **new_board)
+void place(int i, int j, int k, int a, int **board, int **newb)
 {
     for (int y = 0; y < n; y++)
     {
         for (int z = 0; z < m; z++)
         {
-            new_board[y][z] = board[y][z];
+            newb[y][z] = board[y][z];
         }
     }
-    new_board[i][j] = k;
-    attack(i, j, a, new_board);
+    newb[i][j] = k;
+    attack(i, j, a, newb);
 }
 void kkn(int k, int beg, int end, int **board)
 {
@@ -87,13 +86,13 @@ void kkn(int k, int beg, int end, int **board)
             {
                 if (can(i, j, board))
                 {
-                    int **new_board = malloc(n * sizeof(int));
+                    int **newb = malloc(n * sizeof(int));
                     for (int x = 0; x < n; x++)
                     {
-                        new_board[x] = malloc(m * sizeof(int));
+                        newb[x] = malloc(m * sizeof(int));
                     }
-                        place(i, j, 1, 2, board, new_board);
-                        kkn(k - 1, i, j, new_board);
+                        place(i, j, 1, 2, board, newb);
+                        kkn(k - 1, i, j, newb);
                 }
             }
             end = 0;
