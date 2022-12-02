@@ -1,103 +1,99 @@
 #include <stdio.h>
-int d = -9999, comp = 1, me = 2;
-void display(int board[][3])
+int d = 99999, comp = 1, me = 2;
+char board[3][3];
+void showBoard()
 {
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
         {
-            if (board[i][j] == d)
-            {
-                printf("_ ");
-            }
-            else if (board[i][j] == 10) // x
-            {
-                printf("X ");
-            }
-            else if (board[i][j] == 20) // 0
-            {
-                printf("O ");
-            }
+            printf("%c ", board[i][j]);
         }
         printf("\n");
     }
 }
-
-int poswin(int board[][3])
+void initialise()
 {
     for (int i = 0; i < 3; i++)
     {
-        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != d)
+        for (int j = 0; j < 3; j++)
+            board[i][j] = ' ';
+    }
+}
+int won()
+{
+    for (int i = 0; i < 3; i++)
+    {
+        if (board[i][0] == board[i][1] && board[i][1] == board[i][2] && board[i][0] != ' ')
             return 1;
     }
     for (int i = 0; i < 3; i++)
     {
-        if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != d)
+        if (board[0][i] == board[1][i] && board[1][i] == board[2][i] && board[0][i] != ' ')
             return 1;
     }
-    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != d)
+    if (board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != ' ')
         return 1;
-    if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != d)
+    if (board[0][2] == board[1][1] && board[1][1] == board[2][0] && board[0][2] != ' ')
         return 1;
     return 0;
 }
-
-int minimax(int board[][3], int depth, int com, int alpha, int beta)
+int minimax(int depth, int isAI, int alpha, int beta)
 {
     int score = 0;
-    int best = 0;
-    if (poswin(board) == 1)
+    int bestScore = 0;
+    if (won(board) == 1)
     {
-        if (com == 1)
+        if (isAI == 1)
             return -1;
-        if (com != 0)
+        if (isAI == 0)
             return +1;
     }
     else
     {
         if (depth < 9)
         {
-            if (com == 1)
+            if (isAI == 1)
             {
-                best = -d;
+                bestScore = -d;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        if (board[i][j] == d)
+                        if (board[i][j] == ' ')
                         {
-                            board[i][j] = 20;
-                            score = minimax(board, depth + 1, 0, alpha, beta);
-                            board[i][j] = d;
-                            best = (best > score) ? best : score;
-                            alpha = (alpha > best) ? alpha : best;
+                            board[i][j] = 'O';
+                            score = minimax(depth + 1, 0, -beta, -alpha);
+                            board[i][j] = ' ';
+                            alpha = (alpha > bestScore) ? alpha : bestScore;
                             if (beta <= alpha)
                                 break;
+                            bestScore = (score > bestScore) ? score : bestScore;
                         }
                     }
                 }
-                return best;
+                return bestScore;
             }
             else
             {
-                best = d;
+                bestScore = 9999;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
                     {
-                        if (board[i][j] == d)
+                        if (board[i][j] == ' ')
                         {
-                            board[i][j] = 10;
-                            score = minimax(board, depth + 1, 1, alpha, beta);
-                            board[i][j] = d;
-                            best = (best > score) ? score : best;
-                            beta = (beta > best) ? best : beta;
+                            board[i][j] = 'X';
+                            score = minimax(depth + 1, 1, -beta, -alpha);
+                            board[i][j] = ' ';
+                            alpha = (alpha < bestScore) ? alpha : bestScore;
                             if (beta <= alpha)
                                 break;
+                            bestScore = (score < bestScore) ? score : bestScore;
                         }
                     }
                 }
-                return best;
+                return bestScore;
             }
         }
         else
@@ -106,83 +102,100 @@ int minimax(int board[][3], int depth, int com, int alpha, int beta)
         }
     }
 }
-
-void play(int board[][3], int who)
+int bestMove(int moveIndex)
 {
-    int index = 0, x = 0, y = 0;
-    while (!poswin(board) && index != 9)
+    int x = -1, y = -1;
+    int score = 0, bestScore = -d;
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            if (board[i][j] == ' ')
+            {
+                board[i][j] = 'O';
+                score = minimax(moveIndex + 1, 0, -d, d);
+                board[i][j] = ' ';
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    x = i;
+                    y = j;
+                }
+            }
+        }
+    }
+    return x * 3 + y;
+}
+void playTicTacToe(int whoseTurn)
+{
+    int moveIndex = 0, x = 0, y = 0;
+    while (!won(board) && moveIndex != 9)
     {
         int n;
-        if (who == comp)
+        if (whoseTurn == comp)
         {
-            n = minimax(board, index, 0, -d, d);
+            n = bestMove(moveIndex);
             x = n / 3;
             y = n % 3;
-            board[x][y] = 20;
-            printf("\nAfter computer move:\n");
-            display(board);
-            index++;
-            who = 2;
+            board[x][y] = 'O';
+            printf("after computer move:\n");
+            showBoard();
+            moveIndex++;
+            whoseTurn = me;
         }
-        else if (who == me)
+        else if (whoseTurn == me)
         {
-            printf("\nEnter the position:\n");
+            printf("Enter the position where you want to put your move: ");
             scanf("%d", &n);
             n--;
             x = n / 3;
             y = n % 3;
-            if (board[x][y] == d && n < 9 && n >= 0)
+            if (board[x][y] == ' ' && n < 9 && n >= 0)
             {
-                board[x][y] = 10;
-                display(board);
-                index++;
-                who = 1;
+                board[x][y] = 'X';
+                showBoard();
+                moveIndex++;
+                whoseTurn = comp;
+            }
+            else if (board[x][y] != ' ' && n < 9 && n >= 0)
+            {
+                printf("Postion not available\n");
             }
             else if (n < 0 || n > 8)
             {
-                printf("Position Invalid\n");
-            }
-            else if (board[x][y] != d && n < 9 && n >= 0)
-            {
-                printf("\nPosition Unavailable\n");
+                printf("Position invalid\n");
             }
         }
     }
-    if (poswin(board) != 1 && index == 9)
+    if (won(board) == 0 && moveIndex == 9)
     {
-        printf("Draw\n");
+        printf("DRAW!\n");
     }
     else
     {
-        if (who == comp)
+        if (whoseTurn == comp)
         {
-            printf("YOU WON\n");
+            printf("You Won!\n");
         }
-        else if (who == me)
+        else if (whoseTurn == me)
         {
-            printf("COMPUTER WON\n");
+            printf("Computer won\n");
         }
     }
 }
-
 int main()
 {
     int whose;
     printf("Enter 1 to get first turn else enter 2:\n");
     scanf("%d", &whose);
-    int board[3][3];
-    for (int i = 0; i < 3; i++)
-    {
-        for (int j = 0; j < 3; j++)
-            board[i][j] = d;
-    }
+    initialise(board);
     if (whose == 2) // comp move
     {
-        play(board, comp);
+        playTicTacToe(comp);
     }
     else if (whose == 1) // me move
     {
-        play(board, me);
+        playTicTacToe(me);
     }
     else
     {
