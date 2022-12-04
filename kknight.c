@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 int n, m, k;
-int count = 1;
+int count = 0;
 // int board[n][m];
 void display(int **board)
 {
