@@ -1,6 +1,6 @@
 #include <stdio.h>
 int board[3][3];
-int d = -9999, comp = 1, me = 2;
+int d = 9999, comp = 1, me = 2;
 void display()
 {
     for (int i = 0; i < 3; i++)
@@ -58,7 +58,7 @@ int minimax(int depth, int com)
         {
             if (com == 1)
             {
-                best = -9999;
+                best = -d;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
@@ -79,7 +79,7 @@ int minimax(int depth, int com)
             }
             else
             {
-                best = -d;
+                best = d;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
