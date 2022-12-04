@@ -108,7 +108,7 @@ int minimax(int depth, int com)
 int best(int index)
 {
     int x = -1, y = -1;
-    int score = 0, best = d;
+    int score = 0, best = -d;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
