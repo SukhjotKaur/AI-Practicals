@@ -106,14 +106,14 @@ int main()
     scanf("%d%d", &n, &m);
     printf("Enter the number of knights to be placed\n");
     scanf("%d", &k);
-    int **board = malloc(m * sizeof(int));
-    for (int i = 0; i < m; i++)
-    {
-        board[i] = malloc(n * sizeof(int));
-    }
+    int **board = malloc(n * sizeof(int));
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < m; j++)
+        board[i] = malloc(m * sizeof(int));
+    }
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
         {
             board[i][j] = 0;
         }
