@@ -124,6 +124,6 @@ int main()
     long seconds = (end.tv_sec - start.tv_sec);
     long micro = end.tv_usec - start.tv_usec;
     long total = (seconds * 1000000) + micro;
-    printf("Time taken by the program is %ld, seconds and total number f solutions is %d", total,count);
+    printf("Time taken by the program is %ld seconds and total number of solutions is %d", total,count);
     return 0;
 }
