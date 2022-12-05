@@ -50,7 +50,7 @@ int min(int n, int a[n])
 int main()
 {
     int n, i;
-//     printf("\n\nThe series is:\n");
+    // printf("\n\nThe series is:\n");
     int series[] = {0, 2, 1, 22, 2, 1, 3, 5, 9, 15, 8, 10, 10, 11, 10, 14, 20, 25, 27, 58, 78, 69, 94, 74, 86, 73, 153, 136,
                     120, 187, 309, 424, 486, 560, 579, 609, 484, 573, 565, 813, 871, 854, 758, 1243, 1031, 886, 1061, 922, 1371,
                     1580, 1239, 1537, 1292, 1667, 1408, 1835, 1607, 1568, 1902, 1705, 1801, 2391};
@@ -66,12 +66,14 @@ int main()
         grad[i - 1] = series[i] - series[i - 1];
         printf("%d,\t", grad[i - 1]);
     }
+    grad[n]=grad[n-1];
     printf("\n\nThe laplacian is: \n");
-    for (i = 1; i < n - 2; i++)
+    for (i = 1; i < n - 1; i++)
     {
         lap[i - 1] = grad[i] - grad[i - 1];
         printf("%d,\t", lap[i - 1]);
     }
+    lap[n-1]=lap[n-2]=lap[n-3];
     int filter[5] = {1, 1, 1, 1, 1};
     int sum = 0;
     for (i = 0; i < sizeof(filter) / sizeof(filter[1]); i++)
@@ -129,8 +131,8 @@ int main()
     printf("\n\nThe Adam optimization series:\n");
     for (i = 0; i < n; i++)
     {
-        // adam[i]=(float)((series[i]-a*abs(grad[i])/(sqrt(lap[i])+1.0)));
-        adam[i] = (float)(series[i] - a * abs(grad[i]));
+        adam[i]=(float)((series[i]-a*abs(grad[i])/(abs(sqrt(lap[i]))+1.0)));
+        // adam[i] = (float)(series[i] - a * abs(grad[i]));
         printf("%0.2f,\t", adam[i]);
     }
     return 0;
