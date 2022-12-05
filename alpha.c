@@ -1,5 +1,5 @@
 #include <stdio.h>
-int d = 99999, comp = 1, me = 2;
+int d = 99999, comp = 1, me = 2,count=0;
 char board[3][3];
 void showBoard()
 {
@@ -63,12 +63,14 @@ int minimax(int depth, int isAI, int alpha, int beta)
                         if (board[i][j] == ' ')
                         {
                             board[i][j] = 'O';
-                            score = minimax(depth + 1, 0, -beta, -alpha);
+                            score = minimax(depth + 1, 0, alpha, beta);
+                            count++;
                             board[i][j] = ' ';
+                            bestScore = (score > bestScore) ? score : bestScore;
                             alpha = (alpha > bestScore) ? alpha : bestScore;
                             if (beta <= alpha)
                                 break;
-                            bestScore = (score > bestScore) ? score : bestScore;
+                            // bestScore = (score > bestScore) ? score : bestScore;
                         }
                     }
                 }
@@ -85,11 +87,13 @@ int minimax(int depth, int isAI, int alpha, int beta)
                         {
                             board[i][j] = 'X';
                             score = minimax(depth + 1, 1, -beta, -alpha);
+                            count++;
                             board[i][j] = ' ';
-                            alpha = (alpha < bestScore) ? alpha : bestScore;
+                            bestScore = (score < bestScore) ? score : bestScore;
+                            beta = (beta < bestScore) ? beta : bestScore;
                             if (beta <= alpha)
                                 break;
-                            bestScore = (score < bestScore) ? score : bestScore;
+                            // bestScore = (score < bestScore) ? score : bestScore;
                         }
                     }
                 }
@@ -114,6 +118,7 @@ int bestMove(int moveIndex)
             {
                 board[i][j] = 'O';
                 score = minimax(moveIndex + 1, 0, -d, d);
+                count++;
                 board[i][j] = ' ';
                 if (score > bestScore)
                 {
@@ -201,5 +206,6 @@ int main()
     {
         printf("Invalid choice\n");
     }
+    printf("The count is %d", count);
     return 0;
 }
