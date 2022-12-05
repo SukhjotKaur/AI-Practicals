@@ -1,6 +1,6 @@
 #include <stdio.h>
 int board[3][3];
-int d = 9999, comp = 1, me = 2;
+int d = -9999, comp = 1, me = 2,count=0;
 void display()
 {
     for (int i = 0; i < 3; i++)
@@ -58,7 +58,7 @@ int minimax(int depth, int com)
         {
             if (com == 1)
             {
-                best = -d;
+                best = -9999;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
@@ -67,6 +67,7 @@ int minimax(int depth, int com)
                         {
                             board[i][j] = 20;
                             score = minimax(depth + 1, 0);
+                            count++;
                             board[i][j] = d;
                             if (score > best)
                             {
@@ -79,7 +80,7 @@ int minimax(int depth, int com)
             }
             else
             {
-                best = d;
+                best = -d;
                 for (int i = 0; i < 3; i++)
                 {
                     for (int j = 0; j < 3; j++)
@@ -88,6 +89,7 @@ int minimax(int depth, int com)
                         {
                             board[i][j] = 10;
                             score = minimax(depth + 1, 1);
+                            count++;
                             board[i][j] = d;
                             if (score < best)
                             {
@@ -108,7 +110,7 @@ int minimax(int depth, int com)
 int best(int index)
 {
     int x = -1, y = -1;
-    int score = 0, best = -d;
+    int score = 0, best = d;
     for (int i = 0; i < 3; i++)
     {
         for (int j = 0; j < 3; j++)
@@ -116,7 +118,8 @@ int best(int index)
             if (board[i][j] == d)
             {
                 board[i][j] = 20;
-                score = minimax(index + 1, 0);
+                score = minimax(index + 1, 0);//is computer's turn? No i.e. 0
+                count++;
                 board[i][j] = d;
                 if (score > best)
                 {
@@ -127,7 +130,8 @@ int best(int index)
             }
         }
     }
-    return x * 3 + y;
+    int m=x * 3 + y;
+    return m;
 }
 void playTicTacToe(int who)
 {
@@ -209,5 +213,6 @@ int main()
     {
         printf("Invalid choice\n");
     }
+    printf("%d is the count",count);
     return 0;
 }
